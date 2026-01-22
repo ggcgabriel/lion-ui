@@ -1,73 +1,119 @@
-# React + TypeScript + Vite
+# Lion UI - Employee Management Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React para o sistema de controle de funcionários, integrado com a API NestJS.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** + **TypeScript**
+- **Vite** (build tool)
+- **Tailwind CSS** + **shadcn/ui**
+- **React Router** (routing)
+- **Axios** (HTTP client)
 
-## React Compiler
+## Getting Started
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- Backend API rodando (lion-api)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Install Dependencies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Configure Environment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+cp .env.example .env
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+O arquivo `.env` deve conter:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+### 3. Start Development Server
+
+```bash
+npm run dev
+```
+
+O app estará disponível em `http://localhost:5173` (ou próxima porta disponível).
+
+### 4. Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── main.tsx                    # Entry point
+├── App.tsx                     # Router setup
+├── index.css                   # Tailwind + global styles
+├── lib/
+│   └── utils.ts                # Utility functions (cn)
+├── types/
+│   └── index.ts                # TypeScript interfaces
+├── services/
+│   └── api.ts                  # Axios instance + API calls
+├── contexts/
+│   └── AuthContext.tsx         # Auth state management
+├── components/
+│   ├── ProtectedRoute.tsx      # Route guard
+│   ├── EmployeeFormModal.tsx   # Create/Edit modal
+│   └── ui/                     # shadcn/ui components
+│       ├── button.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── card.tsx
+│       ├── badge.tsx
+│       ├── table.tsx
+│       ├── dialog.tsx
+│       └── checkbox.tsx
+└── pages/
+    ├── Login.tsx               # Login page
+    └── Employees.tsx           # Employee list + CRUD
+```
+
+## Features
+
+- **JWT Authentication** - Login com token armazenado em localStorage
+- **Session Restore** - Sessão restaurada automaticamente ao recarregar
+- **Role-Based UI** - Botões de criar/editar visíveis apenas para ADMIN
+- **Protected Routes** - Redirecionamento automático para login
+- **CRUD Operations** - Criar, editar e deletar funcionários (ADMIN)
+- **Error Handling** - Mensagens de erro e loading states
+
+## Test Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| ADMIN | admin@local.com | Admin@123 |
+| USER | user@local.com | User@123 |
+
+## API Endpoints Used
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /auth/login | Login |
+| GET | /auth/me | Get current user |
+| GET | /employees | List employees |
+| POST | /employees | Create employee (ADMIN) |
+| PUT | /employees/:id | Update employee (ADMIN) |
+| DELETE | /employees/:id | Delete employee (ADMIN) |
+
+## Scripts
+
+```bash
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
 ```
